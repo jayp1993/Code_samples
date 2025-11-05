@@ -1,7 +1,7 @@
 variable "vnet_name" {
   type = string
 }
-variable "location" {
+variable "vnet_location" {
   type=string
 }
 variable "resource_group_name" {
