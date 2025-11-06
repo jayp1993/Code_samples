@@ -32,41 +32,59 @@ module "todo-backend-subnet" {
   address_prefixes     = ["10.10.10.128/25"]
 }
 
+module "todo_linux_frontendvm" {
+  source = "../../Child_module/azurerm_Linux_virtual_machine"
+  todo_nic_name="todo_forntend_nic"
+  location="Central India"
+ resource_resouce_group="dev-todo-rg"
+ ip_configuration_name="ipconfig-frontendvm"
+ subnet_id="/subscriptions/bd3dbcd1-3262-48f5-95f6-0a9c3f3411d3/resourceGroups/dev-todo-rg/providers/Microsoft.Network/virtualNetworks/dev-todo-vnet/subnets/dev-todo-frontend-subnet"
+ todo_linux_vm_name="todo-frontendvm"
+ vm_size="Standard_B2s"
+ vm_admin_user="azureuser"
+ vm_admin_password="Admin@123456"
+ publisher="canonical"  #Publisher ID
+ offer="0001-com-ubuntu-server-jammy" #Product ID
+ sku="22_04-lts" #Plan ID
 
-module "todo-frontendvm" {
+}
 
-source = "../../Child_module/azurerm_virtual_machine"
-nic_name="dev-todo-frontendvm_nic"
-nic_location = "Central India"
-rg_name = "dev-todo-rg"
-ip_config = "dev-todo-frontendvm-ipconfig1"
-subnet_id = "/subscriptions/bd3dbcd1-3262-48f5-95f6-0a9c3f3411d3/resourceGroups/dev-todo-rg/providers/Microsoft.Network/virtualNetworks/dev-todo-vnet/subnets/dev-todo-frontend-subnet"
-  vm_name = "dev-todo-frontendvm"
-  vm_location = "Central India"
-  vm_size = "Standard_F2"
-  user_admin = "adminuser"
-  vm_password = "Admin@123456"
-  vm_image_offer = "0001-com-ubuntu-server-jammy"
-  vm_image_publisher = "canonical"
-  vm_image_sku = "22_04-lts-ARM"
+module "todo_linux_backendvm" {
+  source = "../../Child_module/azurerm_Linux_virtual_machine"
+  todo_nic_name="todo_backend_nic"
+  location="Central India"
+ resource_resouce_group="dev-todo-rg"
+ ip_configuration_name="ipconfig-backendvm"
+ subnet_id="/subscriptions/bd3dbcd1-3262-48f5-95f6-0a9c3f3411d3/resourceGroups/dev-todo-rg/providers/Microsoft.Network/virtualNetworks/dev-todo-vnet/subnets/dev-todo-backend-subnet"
+ todo_linux_vm_name="todo-backenddvm"
+ vm_size="Standard_B2s"
+ vm_admin_user="azureuser"
+ vm_admin_password="Admin@123456"
+ publisher="Canonical"  #Publisher ID
+ offer="0001-com-ubuntu-server-focal" #Product ID
+ sku="20_04-lts" #Plan ID
+
+}
+
+module "mssql_server" {
+  source = "../../Child_module/azurerm-mssql_server"
+mssql_server_name="todo-mssqlsever0001"
+resource_group_name = "dev-todo-rg"
+location = "Central India"
+administrator_login = "azureuser"
+administrator_login_password = "Admin@123456"
+
   
 }
 
-module "todo-backendvm" {
-
-source = "../../Child_module/azurerm_virtual_machine"
-nic_name="dev-todo-backend_nic"
-nic_location = "Central India"
-rg_name = "dev-todo-rg"
-ip_config = "dev-todo-frontendvm-ipconfig2"
-subnet_id = "/subscriptions/bd3dbcd1-3262-48f5-95f6-0a9c3f3411d3/resourceGroups/dev-todo-rg/providers/Microsoft.Network/virtualNetworks/dev-todo-vnet/subnets/dev-todo-backend-subnet"
-  vm_name = "dev-todo-backendvm"
-  vm_location = "Central India"
-  vm_size = "Standard_F2"
-  user_admin = "adminuser"
-  vm_password = "Admin@123456"
-  vm_image_offer = "0001-com-ubuntu-pro-focal"
-  vm_image_publisher = "canonical"
-  vm_image_sku = "pro-20_04-lts"
-  
+module "mssql_dabase" {
+source = "../../Child_module/azurerm_mssql_database"
+  mssqldatabase_name = "todo-app-db02"
+  mssql_server_id = "/subscriptions/bd3dbcd1-3262-48f5-95f6-0a9c3f3411d3/resourceGroups/dev-todo-rg/providers/Microsoft.Sql/servers/todo-mssqlsever0001"
+  collation = "SQL_Latin1_General_CP1_CI_AS"
+  license_type =  "LicenseIncluded"
+  max_size_gb = 2
+  sku_name = "Basic"
 }
+
+
