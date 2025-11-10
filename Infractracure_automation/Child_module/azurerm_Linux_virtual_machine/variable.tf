@@ -1,3 +1,14 @@
+variable "subnet_name" {
+  type = string
+}
+variable "vnet_name" {
+  type = string
+  
+}
+variable "pip_name" {
+  type = string
+  
+}
 variable "todo_nic_name" {
     type = string
   
@@ -15,9 +26,6 @@ variable "ip_configuration_name" {
   type = string
 }
 
-variable "subnet_id" {
-  type = string
-}
 
 variable "todo_linux_vm_name" {
     type = string
