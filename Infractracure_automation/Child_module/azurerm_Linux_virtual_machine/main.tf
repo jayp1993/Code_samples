@@ -1,13 +1,3 @@
-data "azurerm_subnet" "subnet" {
-  name                 = var.subnet_name
-  virtual_network_name = var.vnet_name
-  resource_group_name  = var.resource_resouce_group
-}
-
-data "azurerm_public_ip" "pip" {
-  name                = var.pip_name
-  resource_group_name = var.resource_resouce_group
-}
 
 
 resource "azurerm_network_interface" "todo-nic" {
@@ -17,8 +7,8 @@ resource "azurerm_network_interface" "todo-nic" {
 
   ip_configuration {
     name                          = var.ip_configuration_name
-    subnet_id                     = data.azurerm_subnet.subnet.id
-    public_ip_address_id = data.azurerm_public_ip.pip.id
+    subnet_id                     = data.azurerm_subnet.todo-subnet-data.id
+    public_ip_address_id =data.azurerm_public_ip.pip-data.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -28,8 +18,8 @@ resource "azurerm_linux_virtual_machine" "todo-linux-vm" {
   resource_group_name = var.resource_resouce_group
   location            = var.location
   size                = var.vm_size
-  admin_username      = var.vm_admin_user
-  admin_password = var.vm_admin_password
+  admin_username      =data.azurerm_key_vault_secret.keyvault-secrate-username-data.value
+  admin_password = data.azurerm_key_vault_secret.keyvault-secrate-password-data.value
   disable_password_authentication = false
   network_interface_ids = [azurerm_network_interface.todo-nic.id] #implic dependancies
 #   admin_ssh_key {

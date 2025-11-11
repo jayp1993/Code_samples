@@ -1,3 +1,14 @@
+variable "key_vault_name" {
+  type = string
+  
+}
+variable "secrate_username" {
+  type = string
+  
+}
+variable "secrate_password" {
+  
+}
 variable "subnet_name" {
   type = string
 }
@@ -7,6 +18,7 @@ variable "vnet_name" {
 }
 variable "pip_name" {
   type = string
+  description = "ye public ip ka variable hai"
   
 }
 variable "todo_nic_name" {
@@ -34,15 +46,6 @@ variable "todo_linux_vm_name" {
 
 variable "vm_size" {
     type = string
-  
-}
-
-variable "vm_admin_user" {
-    type = string
-  
-}
-
-variable "vm_admin_password" {
   
 }
 

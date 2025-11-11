@@ -32,42 +32,42 @@ module "todo-backend-subnet" {
   address_prefixes     = ["10.10.10.128/25"]
 }
 #dard-1:Vm ke lie bhi alg-2 module bna rhe hai
-module "todo_linux_frontend" {
-  depends_on             = [module.todo-frontend-pip]
+
+module "todo_linux_frontendvm" {
+  depends_on             = [module.todo-frontend-subnet]
+  source                 = "../../Child_module/azurerm_Linux_virtual_machine"
+  key_vault_name = "todo-locker"
+  secrate_username = "todo-vm-username"
+  secrate_password = "todo-vm-password"
+  pip_name="todo-frontend-pip"
   subnet_name            = "dev-todo-frontend-subnet"
   vnet_name              = "dev-todo-vnet"
-  pip_name               = "todo-frontend-pip"
-  source                 = "../../Child_module/azurerm_Linux_virtual_machine"
   todo_nic_name          = "todo_frontend_nic"
   location               = "Central India"
   resource_resouce_group = "dev-todo-rg"
   ip_configuration_name  = "ipconfig-frontendvm"
-
   todo_linux_vm_name = "todo-frontendvm"
-
   vm_size           = "Standard_B2s"
-  vm_admin_user     = "azureuser"
-  vm_admin_password = "Admin@123456"
   publisher         = "canonical"                    #Publisher ID
   offer             = "0001-com-ubuntu-server-jammy" #Product ID
   sku               = "22_04-lts"                    #Plan ID
-
 }
 
 module "todo_linux_backendvm" {
   depends_on             = [module.todo-backend-subnet]
+  source                 = "../../Child_module/azurerm_Linux_virtual_machine"
+  key_vault_name = "todo-locker"
+  secrate_username = "todo-vm-username"
+  secrate_password = "todo-vm-password"
   subnet_name            = "dev-todo-backend-subnet"
   vnet_name              = "dev-todo-vnet"
-  pip_name               = "todo-backend-pip"
-  source                 = "../../Child_module/azurerm_Linux_virtual_machine"
+  pip_name = "todo-backend-pip"
   todo_nic_name          = "todo_backend_nic"
   location               = "Central India"
   resource_resouce_group = "dev-todo-rg"
   ip_configuration_name  = "ipconfig-backendvm"
   todo_linux_vm_name     = "todo-backenddvm"
   vm_size                = "Standard_B2s"
-  vm_admin_user          = "azureuser"
-  vm_admin_password      = "Admin@123456"
   publisher              = "Canonical"                    #Publisher ID
   offer                  = "0001-com-ubuntu-server-focal" #Product ID
   sku                    = "20_04-lts"                    #Plan ID
@@ -75,6 +75,7 @@ module "todo_linux_backendvm" {
 }
 
 module "mssql_server" {
+  depends_on = [ module.todo-rg ]
   source                       = "../../Child_module/azurerm-mssql_server"
   mssql_server_name            = "todo-mssqlsever0001"
   resource_group_name          = "dev-todo-rg"
@@ -97,6 +98,7 @@ module "mssql_database" {
 }
 
 module "todo-frontend-pip" {
+  depends_on = [module.todo-rg  ]
   source              = "../../Child_module/azurerm_pip"
   pip_name            = "todo-frontend-pip"
   resource_group_name = "dev-todo-rg"
@@ -105,6 +107,7 @@ module "todo-frontend-pip" {
 }
 
 module "todo-backend-pip" {
+  depends_on = [ module.todo-rg ]
   source              = "../../Child_module/azurerm_pip"
   pip_name            = "todo-backend-pip"
   resource_group_name = "dev-todo-rg"

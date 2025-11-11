@@ -1,3 +1,4 @@
+
 resource "azurerm_mssql_database" "mssql_database" {
   name         = var.mssqldatabase_name
   server_id    = var.mssql_server_id
