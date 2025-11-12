@@ -1,12 +1,14 @@
+variable "mysql_server_name" {
+  type = string
+}
+variable "resource_group_name" {
+  type = string
+}
 variable "mssqldatabase_name" {
     type = string
   
 }
 
-variable "mssql_server_id" {
-    type = string
-  
-}
 
 variable "collation" {
   type = string

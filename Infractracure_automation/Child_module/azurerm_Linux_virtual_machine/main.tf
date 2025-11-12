@@ -38,4 +38,14 @@ resource "azurerm_linux_virtual_machine" "todo-linux-vm" {
     sku       = var.sku
     version   = "latest"
   }
+custom_data = base64encode(<<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get install -y nginx
+              systemctl enable nginx
+              systemctl start nginx
+              echo "Welcome to Cloud Tech Hacks NGINX Server!" > /var/www/html/index.html
+          EOF
+  )
+
 }
